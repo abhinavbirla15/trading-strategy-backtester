@@ -67,6 +67,6 @@ dist-ssr
 # =====================
 # Lock files (optional)
 # =====================
-uv.lock
+.uv.lock
 
 
