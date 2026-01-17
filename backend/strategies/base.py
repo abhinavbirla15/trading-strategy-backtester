@@ -8,7 +8,7 @@ def base_strategy(ohlcv_data: pd.DataFrame, strategy_name: str) -> pd.DataFrame:
     df=ohlcv_data.copy()
 
     match strategy_name.lower():
-        case "moving_average":
+        case "moving_avg":
             return get_moving_average_signals(df)
         case "rsi":
             return get_rsi_signals(df)

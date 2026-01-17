@@ -1,7 +1,6 @@
 import pandas as pd
 from .risk import risk_assessment
-# from backend.strategies.base import base_strategy
-# from backend.utils.load_data import load_stock_data
+
 
 def back_tester(ohlcv_data: pd.DataFrame, takeProfit_pct: float = 0.05, stopLoss_pct: float = 0.02) -> pd.DataFrame:
     df=ohlcv_data.copy()

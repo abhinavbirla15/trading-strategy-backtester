@@ -4,8 +4,9 @@ from pydantic import BaseModel
 
 from utils.load_data import load_stock_data
 from strategies.base import base_strategy
-from backend.engine.back_tester import back_tester
-from backend.metrics.metrics import calculate_metrics
+from engine.back_tester import back_tester
+from metrics.metrics import calculate_metrics
+from metrics.equity_drawdown import calculate_equity_drawdown
 
 app = FastAPI(
     title="Trading Strategy Backtester",
@@ -38,13 +39,14 @@ def run_backtest(request: BacktestRequest):
         ohlcv_data = load_stock_data(request.symbol.upper(), request.start_date, request.end_date)
         strategy_data = base_strategy(ohlcv_data, request.strategy)
         backtested_data = back_tester(strategy_data)
-        metrics = calculate_metrics(backtested_data)
+        df = calculate_equity_drawdown(backtested_data)
+        metrics = calculate_metrics(df)
 
         return {
-            "symbol": request.symbol.upper(),
+           "symbol": request.symbol.upper(),
             "strategy": request.strategy,
-            "metrics": metrics.to_dict(orient="records")[0],
-            "trades": backtested_data.to_dict(orient="records")
+            "metrics": metrics.to_dict(orient="records"),
+            "equity_data": df[["Date", "Equity", "Drawdown"]].to_dict(orient="records")
         }
 
     except ValueError as e:
